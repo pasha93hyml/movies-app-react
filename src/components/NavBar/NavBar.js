@@ -4,7 +4,7 @@ const NavBar = () => {
   return (
     <>
       <div className="topnav">
-        <a href='#'>Movies App</a>
+        <span>Movies App</span>
         <a className="active" href="#home">
           Home
         </a>
