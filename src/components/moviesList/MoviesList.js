@@ -1,6 +1,8 @@
 import { Component } from "react";
 import MovieService from "../../service/MovieService";
 
+import './MoviesList.css'
+
 class MoviesList extends Component {
   state = {
     moviesDataArr: [],
@@ -30,28 +32,33 @@ class MoviesList extends Component {
   renderItems = (items) => {
     return items.map((item, i) => {
       return (
-        <div className="col">
-            <a href="#">
-          <div className="card">
-            <img src={item.imgUrl} className="card-img-top" alt={item.title} />
-            <div className="card-body">
-              <h5 className="card-title">{item.title}</h5>
-              <p className="card-text">
-                {item.release_date}
-              </p>
+        <div key={i} className="col">
+          
+            <div className="card">
+                <a href="" className="card-ref">
+              <img
+                src={item.imgUrl}
+                className="card-img-top"
+                alt={item.title}
+                height="300"
+              />
+              <div className="card-body">
+                <h5 className="card-title">{item.title}</h5>
+                <p className="card-text">{item.release_date}</p>
+              </div>
+              </a>
             </div>
-          </div>
-          </a>
+          
         </div>
       );
     });
   };
   render() {
-      const markup = this.renderItems(this.state.moviesDataArr)
+    const markup = this.renderItems(this.state.moviesDataArr);
     return (
       <div className="container">
         <div className="row row-cols-1 row-cols-md-6 g-4">
-            {this.state.moviesDataArr.length && markup}
+          {this.state.moviesDataArr.length && markup}
         </div>
       </div>
     );

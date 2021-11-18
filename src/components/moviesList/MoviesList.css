@@ -1,3 +1,14 @@
-.btn {
-    left: 0;
+.card-body{
+    line-height: 18px;
+    font-family: 'PF DinDisplay Medium','Trebuchet MS',Arial;
+    font-size: 10px;
+    color: #78829d;
+    display: block;
+    width: 152px;
+    height: 100px;
+    overflow: hidden;
+}
+
+.card-ref {
+    text-decoration: none;
 }
