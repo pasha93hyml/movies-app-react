@@ -1,4 +1,5 @@
 class MovieService  {
+    _apiBase = 'https://api.themoviedb.org/3/'
     _apiKey = 'api_key=e352cfad536dcafc2d9540798bc763ce';
 
     
@@ -13,22 +14,29 @@ class MovieService  {
     }
 
     getConfiguration = async () => {
-        const res = await this.getResource(`https://api.themoviedb.org/3/configuration?${this._apiKey}`)
+        const res = await this.getResource(`${this._apiBase}configuration?${this._apiKey}`)
         return res.images
     }
 
     getTopRatedMovies = async () => {
-        const res = await this.getResource(`https://api.themoviedb.org/3/movie/top_rated?${this._apiKey}&language=en-US&page=1`)
-        return res.results.map(this.modifiedTrend)
+        const res = await this.getResource(`${this._apiBase}movie/top_rated?${this._apiKey}&language=en-US&page=5`)
+        return res.results.map(this.modifiedItemTrend)
+    }
+    
+    getPopularMovies = async () => {
+        const res = await this.getResource(`${this._apiBase}movie/popular?${this._apiKey}&language=en-US&page=1`)
+
+        return res.results.map(this.modifiedItemTrend)
     }
 
 
-    modifiedTrend = (item) => {
+    modifiedItemTrend = (item) => {
         return {
             id: item.id,
             title: item.title,
             overview: item.overview,
-            poster_path: item.poster_path
+            poster_path: item.poster_path,
+            release_date: item.release_date.slice(0, 4)
         }
     }
     
