@@ -1,7 +1,7 @@
 import { Component } from "react";
 import MovieService from "../../service/MovieService";
 
-import "./MoviesList.css";
+import "./searchResultsList.css";
 
 class MoviesList extends Component {
   state = {
@@ -10,23 +10,32 @@ class MoviesList extends Component {
 
   movieService = new MovieService();
 
+  componentDidUpdate(prevProps, prevState) {
+      if(prevProps.data !== this.props.data) {
+        this.handleSearchQuery()
+      }
+  }
+
   componentDidMount() {
+    this.handleSearchQuery()
+  }
+
+  handleSearchQuery = () => {
     this.movieService.getConfiguration().then(({ base_url, poster_sizes }) => {
-      this.movieService.getPopularMovies().then((data) => {
-        const popularMoviesArr = data.map(item => ({
+        const searchMovies = this.props.data.map((item) => ({
           id: item.id,
           overview: item.overview,
           release_date: item.release_date,
-          title: item.title.length < 27 ? item.title : item.title.slice(0, 27) + '...',
+          title:
+            item.title.length < 27 ? item.title : item.title.slice(0, 27) + "...",
           imgUrl:
             base_url.slice(0, -1) + "/" + poster_sizes[2] + item.poster_path,
         }));
-
+  
         this.setState({
-          moviesDataArr: [...this.state.moviesDataArr, ...popularMoviesArr.splice(0, 12)],
+          moviesDataArr: [...searchMovies.splice(0, 12)],
         });
       });
-    });
   }
 
   renderItems = (items) => {
@@ -52,17 +61,21 @@ class MoviesList extends Component {
     });
   };
   render() {
-    const markup = this.state.moviesDataArr.length && this.renderItems(this.state.moviesDataArr);
+    const markup =
+      this.state.moviesDataArr.length &&
+      this.renderItems(this.state.moviesDataArr);
     return (
-        <>
+      <>
         <div className="container btn-wrapper">
-        <button type="button" className="btn btn-secondary btn-lg">Фильмы</button>
+          <button type="button" className="btn btn-secondary btn-lg">
+            Фильмы
+          </button>
         </div>
-      <div className="container">
-        <div className="row row-cols-1 row-cols-md-6 g-4">
-          {this.state.moviesDataArr.length && markup}
+        <div className="container">
+          <div className="row row-cols-1 row-cols-md-6 g-4">
+            {this.state.moviesDataArr.length && markup}
+          </div>
         </div>
-      </div>
       </>
     );
   }

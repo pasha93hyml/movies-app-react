@@ -7,6 +7,8 @@ class NavBar extends Component {
   state = {
     genres: [],
     isDrop: false,
+    query: '',
+    searchResults: []
   };
 
   movieService = new MovieService();
@@ -30,9 +32,26 @@ class NavBar extends Component {
     ));
   };
 
+  onSearch = (event) => {
+    event.preventDefault()
+    this.setState({query: event.target.value})
+  }
+
+  handleSearchResults = () => {
+    this.movieService.getSearchResults(this.state.query).then(data => {
+      this.setState({searchResults: [...data]})
+    })
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if(prevState.searchResults !== this.state.searchResults) {
+
+      this.props.handleSearch(this.state.searchResults)
+    }
+  }
+
   render() {
-    const markup =
-      this.state.genres.length && this.renderItems(this.state.genres);
+    const markup = this.state.genres.length && this.renderItems(this.state.genres);
 
     return (
       <div className="nav-wrapper">
@@ -45,6 +64,13 @@ class NavBar extends Component {
               <ul className="dropdown-content">{markup}</ul>
             )}
           </div>
+
+          <div className="search-container">
+    <form onSubmit={(e) => e.preventDefault()}>
+      <input onChange={this.onSearch} type="text" placeholder="Search.." name="search" value={this.state.query}/>
+      <button onClick={this.handleSearchResults} type="submit"><i className="fa fa-search"></i></button>
+    </form>
+  </div>
         </div>
       </div>
     );

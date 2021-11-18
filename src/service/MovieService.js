@@ -19,12 +19,12 @@ class MovieService  {
     }
 
     getTopRatedMovies = async () => {
-        const res = await this.getResource(`${this._apiBase}movie/top_rated?${this._apiKey}&language=en-US&page=5`)
+        const res = await this.getResource(`${this._apiBase}movie/top_rated?${this._apiKey}&language=ru-RU&page=5`)
         return res.results.map(this.modifiedItemTrend)
     }
     
     getPopularMovies = async () => {
-        const res = await this.getResource(`${this._apiBase}movie/popular?${this._apiKey}&language=en-US&page=1`)
+        const res = await this.getResource(`${this._apiBase}movie/popular?${this._apiKey}&language=ru-RU&page=1`)
 
         return res.results.map(this.modifiedItemTrend)
     }
@@ -37,8 +37,13 @@ class MovieService  {
 
 
     getMoviesByGenre = async () => {
-        const res = await this.getResource(`${this._apiBase}discover/movie?${this._apiKey}&language=en-US&sort_by=popularity.desc&include_adult=false&include_video=false&page=1&primary_release_date.gte=1990-01-01&primary_release_date.lte=1999-12-31&vote_average.gte=6&with_genres=28`)
+        const res = await this.getResource(`${this._apiBase}discover/movie?${this._apiKey}&language=ru-RU&sort_by=popularity.desc&include_adult=false&include_video=false&page=1&primary_release_date.gte=1990-01-01&primary_release_date.lte=1999-12-31&vote_average.gte=6&with_genres=28`)
         return res;
+    }
+
+    getSearchResults = async (query) => {
+        const res = await this.getResource(`${this._apiBase}search/movie?${this._apiKey}&language=ru-RU&page=1&query=${query}`)
+        return res.results.map(this.modifiedItemTrend);
     }
 
     modifiedItemTrend = (item) => {

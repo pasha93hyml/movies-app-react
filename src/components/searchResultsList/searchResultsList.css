@@ -1,0 +1,31 @@
+.btn-wrapper {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 20px;
+} 
+
+
+.card {
+    height: 400px;
+}
+
+.card-body{
+    line-height: 18px;
+    font-family: 'PF DinDisplay Medium','Trebuchet MS',Arial;
+    font-size: 15px;
+    color: #78829d;
+    display: block;
+    width: 100%;
+    text-align: start;
+    padding-bottom: 5px;
+}
+
+.card-ref {
+    text-decoration: none;
+
+}
+
+.card-ref:hover {
+    cursor: pointer;
+    box-shadow: 0 40px 40px 0 rgb(121, 34, 34);
+}
