@@ -25,7 +25,7 @@
 
 }
 
-.card-ref:hover {
+.col:hover {
     cursor: pointer;
-    box-shadow: 0 40px 40px 0 rgb(121, 34, 34);
+    box-shadow: 0 20px 20px 0 rgb(121, 34, 34);
 }

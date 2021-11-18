@@ -1,7 +1,19 @@
+.nav-wrapper {
+  margin-bottom: 20px;
+}
+
 .container {
     display: flex;
     justify-content: space-between;
     align-items: center;
+}
+
+.btn {
+  margin-top: 15px;
+}
+
+.dropdown-menu > li:hover {
+  cursor: pointer;
 }
 
 input[type=text] {
@@ -25,4 +37,5 @@ input[type=text] {
   .search-container button:hover {
     background: #ccc;
   }
+  
   

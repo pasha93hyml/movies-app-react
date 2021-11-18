@@ -1,32 +1,15 @@
 import { Component } from "react";
-import MovieService from "../../service/MovieService";
 
 import "./MoviesList.css";
-
+import BounceLoader from 'react-spinners/BounceLoader'
 class MoviesList extends Component {
   state = {
-    moviesDataArr: [],
+    loading: true,
+    error: false,
   };
 
-  movieService = new MovieService();
-
   componentDidMount() {
-    this.movieService.getConfiguration().then(({ base_url, poster_sizes }) => {
-      this.movieService.getPopularMovies().then((data) => {
-        const popularMoviesArr = data.map(item => ({
-          id: item.id,
-          overview: item.overview,
-          release_date: item.release_date,
-          title: item.title.length < 27 ? item.title : item.title.slice(0, 27) + '...',
-          imgUrl:
-            base_url.slice(0, -1) + "/" + poster_sizes[2] + item.poster_path,
-        }));
-
-        this.setState({
-          moviesDataArr: [...this.state.moviesDataArr, ...popularMoviesArr.splice(0, 12)],
-        });
-      });
-    });
+    this.setState({ loading: false });
   }
 
   renderItems = (items) => {
@@ -51,18 +34,26 @@ class MoviesList extends Component {
       );
     });
   };
+
   render() {
-    const markup = this.state.moviesDataArr.length && this.renderItems(this.state.moviesDataArr);
+    const { data, onLoadMore } = this.props;;
+    const content = data.length && this.renderItems(data);
     return (
-        <>
-        <div className="container btn-wrapper">
-        <button type="button" className="btn btn-secondary btn-lg">Фильмы</button>
+      <>
+        <BounceLoader color={'#fff'} loading={this.state.loading} size={300}/>
+        <div className="container btn-wrapper"></div>
+        <div className="container">
+          <div className="row row-cols-1 row-cols-md-5 g-4">
+            {data.length && content}
+            <button
+              className="btn btn-secondary d-block mx-auto mb-3"
+              type="button"
+              onClick={() => onLoadMore()}
+            >
+              Load more
+            </button>
+          </div>
         </div>
-      <div className="container">
-        <div className="row row-cols-1 row-cols-md-6 g-4">
-          {this.state.moviesDataArr.length && markup}
-        </div>
-      </div>
       </>
     );
   }
