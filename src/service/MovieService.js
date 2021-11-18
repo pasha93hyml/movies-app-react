@@ -29,6 +29,17 @@ class MovieService  {
         return res.results.map(this.modifiedItemTrend)
     }
 
+    getGenres = async () => {
+        const res = await this.getResource(`${this._apiBase}genre/movie/list?${this._apiKey}&language=ru-RU`)
+
+        return res.genres;
+    }
+
+
+    getMoviesByGenre = async () => {
+        const res = await this.getResource(`${this._apiBase}discover/movie?${this._apiKey}&language=en-US&sort_by=popularity.desc&include_adult=false&include_video=false&page=1&primary_release_date.gte=1990-01-01&primary_release_date.lte=1999-12-31&vote_average.gte=6&with_genres=28`)
+        return res;
+    }
 
     modifiedItemTrend = (item) => {
         return {

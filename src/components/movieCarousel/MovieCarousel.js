@@ -37,7 +37,7 @@ class movieCarousel extends Component {
     const { imgsArr } = this.state;
     const items = this.renderItems(this.state.imgsArr);
     const options = {
-      items: 5,
+      items: 6,
       margin: 15,
       lazyLoad: true,
       loop: true,
