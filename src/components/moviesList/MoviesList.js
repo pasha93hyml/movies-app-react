@@ -6,10 +6,15 @@ class MoviesList extends Component {
   state = {
     loading: true,
     error: false,
+    currentPage: 1,
   };
 
   componentDidMount() {
-    this.setState({ loading: false });
+    this.setState({ loading: false, currentPage: this.state.currentPage + 1 });
+  }
+
+  componentWillUnmount() {
+    this.setState({currentPage: 1})
   }
 
   renderItems = (items) => {
@@ -48,7 +53,10 @@ class MoviesList extends Component {
             <button
               className="btn btn-secondary d-block mx-auto mb-3"
               type="button"
-              onClick={() => onLoadMore()}
+              onClick={() => {
+                onLoadMore(this.state.currentPage)
+                this.setState({currentPage: this.state.currentPage + 1})
+              }}
             >
               Load more
             </button>

@@ -8,7 +8,6 @@ class NavBar extends Component {
     genres: [],
     isDrop: false,
     query: "",
-    searchResults: [],
   };
 
   movieService = new MovieService();
@@ -37,14 +36,7 @@ class NavBar extends Component {
   };
 
   onSearch = (event) => {
-    event.preventDefault();
     this.setState({ query: event.target.value });
-  };
-
-  handleSearchResults = () => {
-    this.movieService.getSearchResults(this.state.query).then((data) => {
-      this.setState({ searchResults: [...data], query: '' });
-    });
   };
 
   componentDidUpdate(prevProps, prevState) {
@@ -67,7 +59,11 @@ class NavBar extends Component {
         <button
                 className="btn btn-secondary mr-3"
                 type="button"
-                onClick={() => this.props.handleHomeBtn()}
+                onClick={() => {
+                  if(!this.props.showMainContent) {
+                    this.props.handleHomeBtn('getPopularMovies', 'showMainContent', 1)
+                  }
+                }}
               >
                 Home page
               </button>
@@ -96,7 +92,13 @@ class NavBar extends Component {
                 value={this.state.query}
               />
               <button onClick={() => {
-                this.props.fetchMoviesData('getSearchResults', 'showSearchReasults', this.props.currentPage,  this.state.query)
+                  this.props
+                    .fetchMoviesData(
+                        'getSearchResults',
+                        'showSearchReasults', 
+                        this.props.currentPage,  
+                        this.state.query
+                        )
                 }} type="submit">
                 <i className="fa fa-search"></i>
               </button>
@@ -109,3 +111,44 @@ class NavBar extends Component {
 }
 
 export default NavBar;
+
+
+// adult: false
+// backdrop_path: "/4gKxQIW91hOTELjY5lzjMbLoGxB.jpg"
+// belongs_to_collection: null
+// budget: 0
+// genres: (3) [
+//   0: {id: 28, name: 'боевик'}
+//   1: {id: 53, name: 'триллер'}
+//   2: {id: 878, name: 'фантастика'}
+// ]
+// homepage: ""
+// id: 763164
+// imdb_id: "tt13265876"
+// original_language: "en"
+// original_title: "Apex"
+// overview: "Пять охотников покупают элитную услугу — возможность выследить человека на необитаемом острове, но сами становятся добычей."
+// popularity: 2624.563
+// poster_path: "/chTkFGToW5bsyw3hgLAe4S5Gt3.jpg"
+// production_companies: (3) [
+//   0: {id: 68628, logo_path: null, name: '308 Enterprises', origin_country: 'CA'}
+//   1: {id: 121204, logo_path: null, name: 'BondIt Media Capital', origin_country: 'US'}
+//   2: {id: 130900, logo_path: null, name: 'Buffalo 8 Productions', origin_country: 'US'}
+// ]
+// production_countries: (2) [
+//   0: {iso_3166_1: 'CA', name: 'Canada'}
+//   1: {iso_3166_1: 'US', name: 'United States of America'}
+// ]
+// release_date: "2021-11-12"
+// revenue: 0
+// runtime: 108
+// spoken_languages: (2) [
+//   0: {english_name: 'English', iso_639_1: 'en', name: 'English'}
+//   1: {english_name: 'Ukrainian', iso_639_1: 'uk', name: 'Український'}
+// ]
+// status: "Released"
+// tagline: ""
+// title: "Преступный квест"
+// video: false
+// vote_average: 5.6
+// vote_count: 157

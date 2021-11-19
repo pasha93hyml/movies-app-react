@@ -20,13 +20,15 @@ class MovieService  {
 
     getTopRatedMovies = async () => {
         const res = await this.getResource(`${this._apiBase}movie/top_rated?${this._apiKey}&language=ru-RU&page=10`)
-        return res.results.map(this.modifiedItemTrend)
+        return res.results.map(this.modifiedItem)
     }
     
     getPopularMovies = async (page) => {
-        const res = await this.getResource(`${this._apiBase}movie/popular?${this._apiKey}&language=ru-RU&page=${page}`)
+        const requesturl = `${this._apiBase}movie/popular?${this._apiKey}&language=ru-RU&page=${page}`
+        console.log(page);
+        const res = await this.getResource(requesturl)
 
-        return res.results.map(this.modifiedItemTrend)
+        return res.results.map(this.modifiedItem)
     }
 
     getGenres = async () => {
@@ -37,17 +39,25 @@ class MovieService  {
 
 
     getMoviesByGenre = async (page = 1, id) => {
-        const res = await this.getResource(`${this._apiBase}discover/movie?${this._apiKey}&language=ru-RU&sort_by=popularity.desc&include_adult=false&include_video=false&page=${page}&primary_release_date.gte=1990-01-01&primary_release_date.lte=1999-12-31&vote_average.gte=6&with_genres=${id}`)
+        const requestUrl = `${this._apiBase}discover/movie?${this._apiKey}&language=ru-RU&sort_by=popularity.desc&include_adult=false&include_video=false&page=${page}&primary_release_date.gte=1990-01-01&primary_release_date.lte=1999-12-31&vote_average.gte=6&with_genres=${id}`
+        console.log(page);
+        const res = await this.getResource(requestUrl)
         return res.results;
     }
 
     getSearchResults = async (page = 1, query) => {
         console.log(page);
         const res = await this.getResource(`${this._apiBase}search/movie?${this._apiKey}&language=ru-RU&page=${page}&query=${query}`)
-        return res.results.map(this.modifiedItemTrend);
+        return res.results.map(this.modifiedItem);
     }
 
-    modifiedItemTrend = (item) => {
+    getDetails = async (id) => {
+        const responseUrl = `${this._apiBase}movie/${id}?${this._apiKey}&language=ru-RU`
+        const res = await this.getResource(responseUrl)
+        return this.modifyMovieItem(res);
+    }
+
+    modifiedItem = (item) => {
         return {
             id: item.id,
             title: item.title,
@@ -56,6 +66,18 @@ class MovieService  {
             release_date: item.release_date.slice(0, 4)
         }
     }
+
+    modifyMovieItem = (item) => ({
+        backdrop_path: item.backdrop_path,
+        genres: [...item.genres.map(genre => genre.name)],
+        overview: item.overview,
+        popularity: item.popularity,
+        production_companies: [...item.production_companies.map(companie => companie.name)],
+        production_countries: [...item.production_countries.map(country => country.name)],
+        release_date: item.release_date.slice(0, 4),
+        runtime: item.runtime + ' мин',
+        title: item.title,
+    })
     
 }
 export default MovieService;
