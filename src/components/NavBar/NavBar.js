@@ -27,9 +27,9 @@ class NavBar extends Component {
   renderItems = (items) => {
     return items.map((item, i) => (
       <li key={i} onClick={() => this.props.handleGenre(item.id)}>
-        <a className="dropdown-item">
+        <span className="dropdown-item">
           {item.name}
-        </a>
+        </span>
       </li>
     ));
   };

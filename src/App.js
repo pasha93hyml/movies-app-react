@@ -11,6 +11,7 @@ import './App.css';
 
 class App extends Component {
   state = {
+    baseUrl: '',
     popularMovies: [],
     searchResults: [],
     genreMovies: [],
@@ -22,32 +23,34 @@ class App extends Component {
 
   movieService = new MovieService();
 
-  componentDidMount() {
-    this.fetchPopularMoviesData();
+  async componentDidMount() {
+    await this.movieService.getConfiguration().then(({base_url, poster_sizes}) => {
+      this.setState({
+        baseUrl: base_url.slice(0, -1) + "/" + poster_sizes[2]
+      })
+    })
+    await this.fetchPopularMoviesData()
   }
 
-  componentDidUpdate(prevProps, prevState) {
-
-  }
-
-  fetchPopularMoviesData = () => {
-    this.movieService.getConfiguration().then(({ base_url, poster_sizes }) => {
-      this.movieService.getPopularMovies(this.state.currentPage).then((data) => {
-        const popularMoviesArr = data.map(item => ({
-          id: item.id,
+  _modifyData = (item) => {
+    const {baseUrl} = this.state;
+    return {
+      id: item.id,
           overview: item.overview,
           release_date: item.release_date,
           title: item.title.length < 27 ? item.title : item.title.slice(0, 27) + '...',
-          imgUrl:
-            base_url.slice(0, -1) + "/" + poster_sizes[2] + item.poster_path,
-        }));
+          imgUrl: item.poster_path ? baseUrl + item.poster_path : 'https://cdn.browshot.com/static/images/not-found.png',
+    }
+  }
 
+  fetchPopularMoviesData = () => {
+      this.movieService.getPopularMovies(this.state.currentPage).then((data) => {
+        const popularMoviesArr = data.map(this._modifyData);
         this.setState({
           popularMovies: [...this.state.popularMovies, ...popularMoviesArr],
           currentPage: this.state.currentPage + 1
         });
       });
-    });
   } 
 
   onLoadMore = () => {
@@ -55,45 +58,25 @@ class App extends Component {
   }
 
   handleGenre = (id) => {
-    this.movieService.getConfiguration().then(({ base_url, poster_sizes }) => {
       this.movieService.getMoviesByGenre(id).then(({results}) => {
-        const genreMoviesArr = results.map(item => ({
-          id: item.id,
-          overview: item.overview,
-          release_date: item.release_date,
-          title: item.title.length < 27 ? item.title : item.title.slice(0, 27) + '...',
-          imgUrl:
-            base_url.slice(0, -1) + "/" + poster_sizes[2] + item.poster_path,
-        }));
-
+        const genreMoviesArr = results.map(this._modifyData);
         this.setState({
           genreMovies: [...genreMoviesArr],
           showGenreList: true,
           showSearchReasults: false,
           showMainContent: false
         });
-      });
     });
   }
 
   handleSearch = (items) => {
-    this.movieService.getConfiguration().then(({ base_url, poster_sizes }) => {
-      const searchMovies = items.map((item) => ({
-        id: item.id,
-        overview: item.overview,
-        release_date: item.release_date,
-        title:
-          item.title.length < 27 ? item.title : item.title.slice(0, 27) + "...",
-        imgUrl: item.poster_path ? 
-          base_url.slice(0, -1) + "/" + poster_sizes[2] + item.poster_path : 'https://cdn.browshot.com/static/images/not-found.png',
-      }));
-
+      const searchMovies = items.map(this._modifyData);
       this.setState({
         searchResults: [...searchMovies],
         showSearchReasults: true,
-        showMainContent: false
+        showMainContent: false,
+        showGenreList: false
       });
-    });
   }
 
   render() {
