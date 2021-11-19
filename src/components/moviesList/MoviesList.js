@@ -41,7 +41,7 @@ class MoviesList extends Component {
     return (
       <>
         <BounceLoader color={'#fff'} loading={this.state.loading} size={300}/>
-        <div className="container btn-wrapper"></div>
+        <div className="bg-light pt-3">
         <div className="container">
           <div className="row row-cols-1 row-cols-md-5 g-4">
             {data.length && content}
@@ -53,6 +53,7 @@ class MoviesList extends Component {
               Load more
             </button>
           </div>
+        </div>
         </div>
       </>
     );

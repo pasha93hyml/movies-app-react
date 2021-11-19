@@ -15,7 +15,6 @@ class NavBar extends Component {
 
   componentDidMount() {
     this.movieService.getGenres().then((data) => {
-      console.log(data);
       this.setState({ genres: [...this.state.genres, ...data] });
     });
   }
@@ -26,7 +25,10 @@ class NavBar extends Component {
 
   renderItems = (items) => {
     return items.map((item, i) => (
-      <li key={i} onClick={() => this.props.handleGenre(item.id)}>
+      <li key={i} onClick={() => {
+        this.props.fetchMoviesData('getMoviesByGenre','showGenreList', this.props.currentPage ,  item.id)
+        this.setState({isDrop: false})
+        }}>
         <span className="dropdown-item">
           {item.name}
         </span>
@@ -62,6 +64,13 @@ class NavBar extends Component {
     return (
       <div className="nav-wrapper">
         <div className="container">
+        <button
+                className="btn btn-secondary mr-3"
+                type="button"
+                onClick={() => this.props.handleHomeBtn()}
+              >
+                Home page
+              </button>
           <div className="dropdown">
               <button
                 className="btn btn-secondary"
@@ -86,7 +95,9 @@ class NavBar extends Component {
                 name="search"
                 value={this.state.query}
               />
-              <button onClick={this.handleSearchResults} type="submit">
+              <button onClick={() => {
+                this.props.fetchMoviesData('getSearchResults', 'showSearchReasults', this.props.currentPage,  this.state.query)
+                }} type="submit">
                 <i className="fa fa-search"></i>
               </button>
             </form>
