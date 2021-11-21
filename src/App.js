@@ -17,18 +17,20 @@ class App extends Component {
     error: false,
     baseUrl: '',
     moviesData: [],
+    movieData: null,
     currentPage: 0,
     showMainContent: true,
     showSearchReasults: false,
     showGenreList: false,
+    showMoviePage: false,
     query: '',
     genreId: null,
+    movieID: null,
   }
 
   movieService = new MovieService();
 
    componentDidMount() {
-    this.movieService.getDetails(763164).then(data => console.log(data))
      this.movieService.getConfiguration().then(({base_url, poster_sizes}) => {
       this.setState({
         baseUrl: base_url.slice(0, -1) + "/" + poster_sizes[5]
@@ -53,6 +55,10 @@ class App extends Component {
       this.fetchMoviesData('getMoviesByGenre','showGenreList', 1, this.state.genreId)
       console.log(this.state.moviesData);
     }
+
+    if(this.state.movieID && this.state.movieID !== prevState.movieID) {
+      this.fetchMovieData()
+    }
   }
 
   handleQuery = (value) => {
@@ -61,6 +67,10 @@ class App extends Component {
 
   handleGenreId = (id) => {
     this.setState({genreId: id})
+  }
+
+  handleMovieId = (id) => {
+    this.setState({movieID: id})
   }
 
   _modifyData = (item) => {
@@ -102,21 +112,33 @@ class App extends Component {
         showMainContent: content === 'showMainContent',
         showSearchReasults: content === 'showSearchReasults',
         showGenreList: content === 'showGenreList',
+        showMoviePage: false,
         currentPage: page,
         moviesData: (!this.state[content]) ? [...responseData] : [...this.state.moviesData, ...responseData],
         loading: false,
+        movieID: null,
+        movieData: null,
       })
     }).catch(this.onError)
   }
 
   fetchMovieData = () => {
-
+    this.movieService.getDetails(this.state.movieID)
+    .then(res => {
+      this.setState(() => ({
+      movieData: res, 
+      showMainContent: false,
+      showSearchReasults: false,
+      showGenreList: false,
+      showMoviePage: true,
+    }))})
   }
 
   render() {
-    const {loading, error, moviesData, showSearchReasults, showGenreList, showMainContent} = this.state;
+    const {loading, error, moviesData, showSearchReasults, showGenreList, showMainContent, showMoviePage, baseUrl, movieData} = this.state;
     const spinner = loading ? <BounceLoader color={'#fff'} loading={this.state.loading} size={300}/> : null;
     const errorMessage = error ? <ErrorMessage/> : null;
+    const showContent = showSearchReasults || showMainContent || showGenreList;
     return (
       <div className="App">
         <NavBar fetchMoviesData={this.fetchMoviesData} 
@@ -127,9 +149,8 @@ class App extends Component {
         {spinner}
         {errorMessage}
         {showMainContent &&  <MovieCarousel/>}
-        {showMainContent && <MoviesList data={moviesData} onLoadMore={this.onLoadMore}/>}
-        {showSearchReasults && <MoviesList data={moviesData} onLoadMore={this.onLoadMore}/>}
-        {showGenreList && <MoviesList data={moviesData} onLoadMore={this.onLoadMore}/>}
+        {showContent && <MoviesList data={moviesData} onLoadMore={this.onLoadMore} handleMovieId={this.handleMovieId}/>}
+        {showMoviePage && <MoviePage baseUrl={baseUrl} data={movieData}/>}
       </div>
     );
   }

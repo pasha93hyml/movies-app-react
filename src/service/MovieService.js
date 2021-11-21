@@ -38,7 +38,7 @@ class MovieService  {
 
 
     getMoviesByGenre = async (page = 1, id) => {
-        const requestUrl = `${this._apiBase}discover/movie?${this._apiKey}&language=ru-RU&sort_by=popularity.desc&include_adult=false&include_video=false&page=${page}&primary_release_date.gte=1990-01-01&primary_release_date.lte=1999-12-31&vote_average.gte=6&with_genres=${id}`
+        const requestUrl = `${this._apiBase}discover/movie?${this._apiKey}&language=ru-RU&sort_by=popularity.desc&include_adult=false&include_video=false{true}&page=${page}&primary_release_date.gte=1990-01-01&primary_release_date.lte=1999-12-31&vote_average.gte=6&with_genres=${id}`
         const res = await this.getResource(requestUrl)
         return res.results;
     }
@@ -75,7 +75,7 @@ class MovieService  {
         release_date: item.release_date.slice(0, 4),
         runtime: item.runtime + ' мин',
         title: item.title,
-        budget: item.budget,
+        budget: item.budget + '$',
         original_title: item.original_title
     })
     

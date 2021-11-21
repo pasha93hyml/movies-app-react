@@ -19,7 +19,7 @@ class MoviesList extends Component {
     return items.map((item, i) => {
       return (
         <div key={i} className="col">
-          <div className="card">
+          <div className="card" onClick={() => this.props.handleMovieId(item.id)}>
             <div className="card-ref">
               <img
                 src={item.imgUrl}
@@ -32,6 +32,7 @@ class MoviesList extends Component {
                 <p className="card-text">{item.release_date}</p>
               </div>
             </div>
+            <div className="item__name">{item.title}</div>
           </div>
         </div>
       );
