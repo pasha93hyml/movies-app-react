@@ -5,7 +5,6 @@ import BounceLoader from 'react-spinners/BounceLoader'
 class MoviesList extends Component {
   state = {
     loading: true,
-    error: false,
     currentPage: 1,
   };
 

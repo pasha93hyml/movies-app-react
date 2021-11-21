@@ -5,6 +5,7 @@ import MovieService from './service/MovieService';
 import NavBar from './components/NavBar/NavBar';
 import MovieCarousel from './components/movieCarousel/MovieCarousel'
 import MoviesList from './components/moviesList/MoviesList'
+import MoviePage from './components/moviePage/MoviePage';
 import './App.css';
 
 class App extends Component {
@@ -84,8 +85,6 @@ class App extends Component {
         {showMainContent && <MoviesList data={moviesData} onLoadMore={this.onLoadMore}/>}
         {showSearchReasults && <MoviesList data={moviesData} onLoadMore={this.onLoadMore}/>}
         {showGenreList && <MoviesList data={moviesData} onLoadMore={this.onLoadMore}/>}
-       {/* {showSearchReasults && <SearchResultsList data={searchResults}/>}
-       {showGenreList && <GenreList data ={this.state.genreMovies}/>} */}
       </div>
     );
   }

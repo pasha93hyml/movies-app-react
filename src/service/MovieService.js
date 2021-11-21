@@ -25,7 +25,6 @@ class MovieService  {
     
     getPopularMovies = async (page) => {
         const requesturl = `${this._apiBase}movie/popular?${this._apiKey}&language=ru-RU&page=${page}`
-        console.log(page);
         const res = await this.getResource(requesturl)
 
         return res.results.map(this.modifiedItem)
@@ -54,6 +53,7 @@ class MovieService  {
     getDetails = async (id) => {
         const responseUrl = `${this._apiBase}movie/${id}?${this._apiKey}&language=ru-RU`
         const res = await this.getResource(responseUrl)
+        await console.log(res);
         return this.modifyMovieItem(res);
     }
 
@@ -68,7 +68,7 @@ class MovieService  {
     }
 
     modifyMovieItem = (item) => ({
-        backdrop_path: item.backdrop_path,
+        poster_path: item.poster_path,
         genres: [...item.genres.map(genre => genre.name)],
         overview: item.overview,
         popularity: item.popularity,
@@ -77,6 +77,8 @@ class MovieService  {
         release_date: item.release_date.slice(0, 4),
         runtime: item.runtime + ' мин',
         title: item.title,
+        budget: item.budget,
+        original_title: item.original_title
     })
     
 }

@@ -8,6 +8,7 @@ class NavBar extends Component {
     genres: [],
     isDrop: false,
     query: "",
+    prevQuery: '',
   };
 
   movieService = new MovieService();
@@ -40,9 +41,7 @@ class NavBar extends Component {
   };
 
   componentDidUpdate(prevProps, prevState) {
-    if (prevState.searchResults !== this.state.searchResults) {
-      this.props.handleSearch(this.state.searchResults);
-    }
+    
   }
 
   render() {
@@ -62,6 +61,10 @@ class NavBar extends Component {
                 onClick={() => {
                   if(!this.props.showMainContent) {
                     this.props.handleHomeBtn('getPopularMovies', 'showMainContent', 1)
+                    this.setState(() => ({
+                      query: '',
+                      prevQuery: ''
+                    }))
                   }
                 }}
               >
@@ -92,13 +95,19 @@ class NavBar extends Component {
                 value={this.state.query}
               />
               <button onClick={() => {
+                if(this.state.query !== this.state.prevQuery) {
                   this.props
-                    .fetchMoviesData(
-                        'getSearchResults',
-                        'showSearchReasults', 
-                        this.props.currentPage,  
-                        this.state.query
-                        )
+                  .fetchMoviesData(
+                      'getSearchResults',
+                      'showSearchReasults', 
+                      this.props.currentPage,  
+                      this.state.query
+                      )
+                  this.setState(() => ({
+                    prevQuery: this.state.query
+                  }))
+                }
+                  
                 }} type="submit">
                 <i className="fa fa-search"></i>
               </button>
