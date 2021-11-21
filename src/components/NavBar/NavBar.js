@@ -26,7 +26,7 @@ class NavBar extends Component {
   renderItems = (items) => {
     return items.map((item, i) => (
       <li key={i} onClick={() => {
-        this.props.fetchMoviesData('getMoviesByGenre','showGenreList', this.props.currentPage ,  item.id)
+        this.props.handleGenreId(item.id)
         this.setState({isDrop: false})
         }}>
         <span className="dropdown-item">
@@ -96,13 +96,7 @@ class NavBar extends Component {
               />
               <button onClick={() => {
                 if(this.state.query !== this.state.prevQuery) {
-                  this.props
-                  .fetchMoviesData(
-                      'getSearchResults',
-                      'showSearchReasults', 
-                      this.props.currentPage,  
-                      this.state.query
-                    )
+                  this.props.handleQuery(this.state.query)
                   this.setState(() => ({
                     prevQuery: this.state.query
                   }))

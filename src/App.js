@@ -2,6 +2,9 @@ import { Component } from 'react';
 
 import MovieService from './service/MovieService';
 
+import BounceLoader from 'react-spinners/BounceLoader'
+import ErrorMessage from './components/errorMessage/ErrorMessage';
+
 import NavBar from './components/NavBar/NavBar';
 import MovieCarousel from './components/movieCarousel/MovieCarousel'
 import MoviesList from './components/moviesList/MoviesList'
@@ -10,6 +13,8 @@ import './App.css';
 
 class App extends Component {
   state = {
+    loading: true,
+    error: false,
     baseUrl: '',
     moviesData: [],
     currentPage: 0,
@@ -17,6 +22,7 @@ class App extends Component {
     showSearchReasults: false,
     showGenreList: false,
     query: '',
+    genreId: null,
   }
 
   movieService = new MovieService();
@@ -38,6 +44,23 @@ class App extends Component {
     if(!!this.state.query && this.state.query !== prevState.query) {
       this.fetchMoviesData('getSearchResults', 'showSearchReasults', 1, this.state.query)
     }
+
+    if(this.state.genreId !== prevState.genreId) {
+      this.setState({showGenreList: false})
+    }
+
+    if(this.state.genreId && this.state.genreId !== prevState.genreId) {
+      this.fetchMoviesData('getMoviesByGenre','showGenreList', 1, this.state.genreId)
+      console.log(this.state.moviesData);
+    }
+  }
+
+  handleQuery = (value) => {
+    this.setState({query: value})
+  }
+
+  handleGenreId = (id) => {
+    this.setState({genreId: id})
   }
 
   _modifyData = (item) => {
@@ -62,6 +85,16 @@ class App extends Component {
     this.fetchMoviesData(func, content, page, query);
   }
 
+  onError = (error) => {
+    this.setState({
+      error: true,
+      loading: false,
+      showMainContent: false,
+      showSearchReasults: false,
+      showGenreList: false,
+    })
+  }
+
   fetchMoviesData =  (func, content = 'showMainContent', page,  value = null) => {
      this.movieService[func](page, value).then(data => {
       const responseData = data.map(this._modifyData)
@@ -71,9 +104,9 @@ class App extends Component {
         showGenreList: content === 'showGenreList',
         currentPage: page,
         moviesData: (!this.state[content]) ? [...responseData] : [...this.state.moviesData, ...responseData],
-        query: value,
+        loading: false,
       })
-    })
+    }).catch(this.onError)
   }
 
   fetchMovieData = () => {
@@ -81,12 +114,18 @@ class App extends Component {
   }
 
   render() {
-    const {moviesData, showSearchReasults, showGenreList, showMainContent} = this.state;
+    const {loading, error, moviesData, showSearchReasults, showGenreList, showMainContent} = this.state;
+    const spinner = loading ? <BounceLoader color={'#fff'} loading={this.state.loading} size={300}/> : null;
+    const errorMessage = error ? <ErrorMessage/> : null;
     return (
       <div className="App">
         <NavBar fetchMoviesData={this.fetchMoviesData} 
         handleHomeBtn={this.fetchMoviesData}
-        showMainContent={showMainContent}/>
+        handleQuery={this.handleQuery}
+        showMainContent={showMainContent}
+        handleGenreId={this.handleGenreId}/>
+        {spinner}
+        {errorMessage}
         {showMainContent &&  <MovieCarousel/>}
         {showMainContent && <MoviesList data={moviesData} onLoadMore={this.onLoadMore}/>}
         {showSearchReasults && <MoviesList data={moviesData} onLoadMore={this.onLoadMore}/>}

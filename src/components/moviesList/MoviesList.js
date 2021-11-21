@@ -1,7 +1,6 @@
 import { Component } from "react";
 
 import "./MoviesList.css";
-import BounceLoader from 'react-spinners/BounceLoader'
 class MoviesList extends Component {
   state = {
     loading: true,
@@ -44,7 +43,6 @@ class MoviesList extends Component {
     const content = data.length && this.renderItems(data);
     return (
       <>
-        <BounceLoader color={'#fff'} loading={this.state.loading} size={300}/>
         <div className="bg-light pt-3">
         <div className="container">
           <div className="row row-cols-1 row-cols-md-5 g-4">

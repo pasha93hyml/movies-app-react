@@ -45,6 +45,7 @@ class MovieService  {
 
     getSearchResults = async (page = 1, query) => {
         const res = await this.getResource(`${this._apiBase}search/movie?${this._apiKey}&language=ru-RU&page=${page}&query=${query}`)
+        console.log(res.results);
         return res.results.map(this.modifiedItem);
     }
 
