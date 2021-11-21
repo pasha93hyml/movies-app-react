@@ -16,20 +16,28 @@ class App extends Component {
     showMainContent: true,
     showSearchReasults: false,
     showGenreList: false,
-    query: ''
+    query: '',
   }
 
   movieService = new MovieService();
 
-  async componentDidMount() {
-    await this.movieService.getConfiguration().then(({base_url, poster_sizes}) => {
-      console.log(poster_sizes);
+   componentDidMount() {
+    this.movieService.getDetails(763164).then(data => console.log(data))
+     this.movieService.getConfiguration().then(({base_url, poster_sizes}) => {
       this.setState({
         baseUrl: base_url.slice(0, -1) + "/" + poster_sizes[5]
       })
     })
     this.fetchMoviesData('getPopularMovies', 'showMainContent')
-    
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if(this.state.query !== prevState.query) {
+      this.setState({showSearchReasults: false})
+    }
+    if(!!this.state.query && this.state.query !== prevState.query) {
+      this.fetchMoviesData('getSearchResults', 'showSearchReasults', 1, this.state.query)
+    }
   }
 
   _modifyData = (item) => {
@@ -54,9 +62,8 @@ class App extends Component {
     this.fetchMoviesData(func, content, page, query);
   }
 
-  fetchMoviesData = (func, content = 'showMainContent', page,  value = null) => {
-    this.movieService[func](page, value).then(data => {
-      console.log(data);
+  fetchMoviesData =  (func, content = 'showMainContent', page,  value = null) => {
+     this.movieService[func](page, value).then(data => {
       const responseData = data.map(this._modifyData)
       this.setState({
         showMainContent: content === 'showMainContent',
@@ -74,7 +81,6 @@ class App extends Component {
   }
 
   render() {
-    this.movieService.getDetails(763164).then(data => console.log(data))
     const {moviesData, showSearchReasults, showGenreList, showMainContent} = this.state;
     return (
       <div className="App">

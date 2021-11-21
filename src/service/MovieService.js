@@ -39,13 +39,11 @@ class MovieService  {
 
     getMoviesByGenre = async (page = 1, id) => {
         const requestUrl = `${this._apiBase}discover/movie?${this._apiKey}&language=ru-RU&sort_by=popularity.desc&include_adult=false&include_video=false&page=${page}&primary_release_date.gte=1990-01-01&primary_release_date.lte=1999-12-31&vote_average.gte=6&with_genres=${id}`
-        console.log(page);
         const res = await this.getResource(requestUrl)
         return res.results;
     }
 
     getSearchResults = async (page = 1, query) => {
-        console.log(page);
         const res = await this.getResource(`${this._apiBase}search/movie?${this._apiKey}&language=ru-RU&page=${page}&query=${query}`)
         return res.results.map(this.modifiedItem);
     }
@@ -53,7 +51,6 @@ class MovieService  {
     getDetails = async (id) => {
         const responseUrl = `${this._apiBase}movie/${id}?${this._apiKey}&language=ru-RU`
         const res = await this.getResource(responseUrl)
-        await console.log(res);
         return this.modifyMovieItem(res);
     }
 

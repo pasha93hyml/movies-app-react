@@ -102,7 +102,7 @@ class NavBar extends Component {
                       'showSearchReasults', 
                       this.props.currentPage,  
                       this.state.query
-                      )
+                    )
                   this.setState(() => ({
                     prevQuery: this.state.query
                   }))
