@@ -15,11 +15,13 @@ class MoviePage extends Component {
                         <p>{data.original_title}</p>
                     </div>
                 </div>
-                <div className="poster"><img src={baseUrl + data.poster_path} alt={data.title} /></div>
-                <div className="player">Тут мог бы быть плеер :)</div>
-                <div className="details">{data.overview}</div>
-                <div className="description">
+                <div className="poster"><img src={baseUrl + data.poster_path} alt={data.title} />
                     <div className="rate">Популярность фильма: {data.popularity}</div>
+                </div>
+                <div className="player">Тут мог бы быть плеер :)</div>
+                <div className="details">{data.overview.length ? data.overview : 'Нет описания данного фильма'}</div>
+                <div className="description">
+                    
                     <div className="sub_grid">
                         <div className="sub_title">Год</div> <div className="sub_descr">{data.release_date}</div>
                         <div className="sub_title">Страна</div> <div className="sub_descr">{data.production_countries.map((item, i) => {

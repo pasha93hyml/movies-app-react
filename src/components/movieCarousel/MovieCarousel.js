@@ -8,6 +8,7 @@ import "./movieCarousel.css";
 class movieCarousel extends Component {
   state = {
     imgsArr: [],
+    moviesID: [],
   };
 
   movieService = new MovieService();
@@ -16,17 +17,18 @@ class movieCarousel extends Component {
     this.movieService.getConfiguration().then(({ base_url, poster_sizes }) => {
       this.movieService.getTopRatedMovies().then((data) => {
         const imgsArr = data.map(
-          (item) =>
+          (item) => 
             base_url.slice(0, -1) + "/" + poster_sizes[2] + item.poster_path
         );
-        this.setState(() => ({ imgsArr }));
+        const moviesID = data.map(item => item.id)
+        this.setState(() => ({ imgsArr, moviesID }));
       });
     });
   }
 
   renderItems = (items) => {
     const markup = items.map((item, i) => (
-      <div key={i} className="item">
+      <div key={i} className="item" onClick={() => this.props.handleMovieId(this.state.moviesID[i])}>
         <img key={i} src={item} alt="" height={300} />
       </div>
     ));

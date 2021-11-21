@@ -1,5 +1,4 @@
 .movie {
-    /* max-width: 1400px; */
     background-color: #fff;
     display: grid;
     grid-gap: 5px;
@@ -23,7 +22,7 @@
 .title_wrapper {
     padding-top: 10%;
     display: flex;
-    flex-wrap: wrap;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
 }
