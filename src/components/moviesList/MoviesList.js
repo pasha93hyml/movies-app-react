@@ -3,7 +3,6 @@ import { Component } from "react";
 import "./MoviesList.css";
 class MoviesList extends Component {
   state = {
-    loading: true,
     currentPage: 1,
   };
 

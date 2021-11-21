@@ -136,7 +136,7 @@ class App extends Component {
   }
 
   render() {
-    const {loading, error, moviesData, showSearchReasults, showGenreList, showMainContent, showMoviePage, baseUrl, movieData, movieID} = this.state;
+    const {loading, error, moviesData, showSearchReasults, showGenreList, showMainContent, showMoviePage, baseUrl, movieData} = this.state;
     const spinner = loading ? <BounceLoader color={'#fff'} loading={this.state.loading} size={300}/> : null;
     const errorMessage = error ? <ErrorMessage/> : null;
     const showContent = showSearchReasults || showMainContent || showGenreList;
